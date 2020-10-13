@@ -1,6 +1,9 @@
 //Modelos
 const Usuario = require('../models/usuario');
 
+//Middlewares
+const { verificaToken, verificarRole } = require('../middlewares/autenticacion')
+
 //Imports
 const express = require('express');
 const app = express();
@@ -12,7 +15,14 @@ const bcrypt = require('bcrypt'); //https://www.npmjs.com/package/bcrypt
 const _ = require('underscore');
 
 //RUTAS
-app.get('/usuario', function (req, res) {
+app.get('/usuario', verificaToken, (req, res) => {
+
+    /* ASI PUEDO OBTENER LOS DATOS QUE VIENEN DEL TOKEN
+    return res.json({
+        usuario: req.usuario,
+        email:req.usuario.email
+    })
+    */
 
     let desde = req.query.desde || 0; //para obtener parametros opcionales
     desde = Number(desde);
@@ -48,7 +58,7 @@ app.get('/usuario', function (req, res) {
         })
 })
 
-app.post('/usuario', function (req, res) {
+app.post('/usuario', [verificaToken, verificarRole], (req, res) => {
     let body = req.body;
     let usuario = new Usuario({
         nombre: body.nombre,
@@ -74,7 +84,7 @@ app.post('/usuario', function (req, res) {
 
 })
 
-app.put('/usuario/:id', function (req, res) {
+app.put('/usuario/:id', [verificaToken, verificarRole], (req, res) => {
     //Recoger parametros de la url
     let id = req.params.id;
 
@@ -98,7 +108,7 @@ app.put('/usuario/:id', function (req, res) {
     })
 })
 
-app.delete('/usuario/:id', function (req, res) {
+app.delete('/usuario/:id', [verificaToken, verificarRole], (req, res) => {
     let id = req.params.id;
 
     Usuario.findByIdAndRemove(id, (err, usuarioborrado) => {
@@ -126,7 +136,7 @@ app.delete('/usuario/:id', function (req, res) {
     })
 })
 
-app.delete('/usuario-estado/:id', function (req, res) {
+app.delete('/usuario-estado/:id', [verificaToken, verificarRole], (req, res) => {
     //Recoger parametros de la url
     let id = req.params.id;
 
