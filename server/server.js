@@ -2,6 +2,7 @@ require('./config/config')
 const express = require('express');
 const mongoose = require('mongoose'); //https://mongoosejs.com/
 const app = express();
+const path = require('path');
 
 //BODY PARSER, para poder recoger lo que nos llega por body 
 const bodyParser = require('body-parser'); //https://www.npmjs.com/package/body-parser
@@ -9,6 +10,9 @@ const bodyParser = require('body-parser'); //https://www.npmjs.com/package/body-
 app.use(bodyParser.urlencoded({ extended: false }))
 // parse application/json
 app.use(bodyParser.json())
+
+//Habilitar la carpeta public o client
+app.use(express.static(path.resolve(__dirname, '../public')));
 
 //Rutas
 app.use(require('./routes/index'));
