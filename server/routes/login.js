@@ -50,7 +50,7 @@ app.post('/login', (req, res) => {
 
         return res.status(200).json({
             status: "success",
-            user: userDB,
+            usuario: userDB,
             token
         });
 
